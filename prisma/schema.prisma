@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id              String          @id @default(uuid())
+  name            String
+  email           String          @unique
+  password        String
+  role            Role            @default(USER)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  savedProperties SavedProperty[]
+  inquiries       Inquiry[]
+
+  @@map("users")
+}
+
+model Property {
+  id              String          @id @default(uuid())
+  title           String
+  description     String
+  price           Float
+  address         String
+  city            String
+  category        Category
+  bedrooms        Int
+  bathrooms       Int
+  areaSquareMeter Float
+  imageUrl        String
+  isFeatured      Boolean         @default(false)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  savedByUsers    SavedProperty[]
+  inquiries       Inquiry[]
+
+  @@map("properties")
+}
+
+model SavedProperty {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId String
+  savedAt    DateTime @default(now())
+
+  @@unique([userId, propertyId])
+  @@map("saved_properties")
+}
+
+model Inquiry {
+  id          String   @id @default(uuid())
+  message     String
+  contactDate DateTime?
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  propertyId  String
+  createdAt   DateTime @default(now())
+
+  @@map("inquiries")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Category {
+  HOUSE
+  APARTMENT
+  LAND
+  COMMERCIAL
+}

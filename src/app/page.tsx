@@ -1,65 +1,138 @@
-import Image from "next/image";
+import React from "react";
+import Link from "next/link";
+import PropertyCard, { PropertyData } from "@/components/PropertyCard";
+import { searchProperties } from "@/lib/actions/propertyActions";
+
+// Mock data to display before real database is populated
+const MOCK_PROPERTIES: PropertyData[] = [
+  {
+    id: "1",
+    title: "Modern Glass Villa in Beverly Hills",
+    price: 4500000,
+    address: "123 Palm Ave",
+    city: "Beverly Hills, CA",
+    bedrooms: 5,
+    bathrooms: 6,
+    areaSquareMeter: 450,
+    imageUrl: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
+    isFeatured: true,
+    category: "HOUSE"
+  },
+  {
+    id: "2",
+    title: "Luxury Penthouse with Skyline View",
+    price: 2100000,
+    address: "88 Downtown Blvd",
+    city: "New York, NY",
+    bedrooms: 3,
+    bathrooms: 3,
+    areaSquareMeter: 220,
+    imageUrl: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
+    isFeatured: true,
+    category: "APARTMENT"
+  },
+  {
+    id: "3",
+    title: "Minimalist Smart Home Retreat",
+    price: 1850000,
+    address: "450 Pine Lane",
+    city: "Austin, TX",
+    bedrooms: 4,
+    bathrooms: 3,
+    areaSquareMeter: 310,
+    imageUrl: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80",
+    isFeatured: false,
+    category: "HOUSE"
+  }
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="flex flex-col items-center w-full min-h-screen">
+      {/* Hero Section */}
+      <section className="relative w-full h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden bg-gray-50">
+        <div className="absolute inset-0 w-full h-full opacity-60">
+          <img 
+            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80" 
+            alt="Hero Background" 
+            className="object-cover w-full h-full"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-white via-white/70 to-white/30"></div>
+        </div>
+
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-fade-in">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-black tracking-tight mb-6 drop-shadow-sm">
+            Find Your Dream <span className="text-primary-600">Home</span> Today.
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="mt-4 text-xl md:text-2xl text-gray-800 max-w-3xl mx-auto mb-10 font-medium drop-shadow-sm">
+            Discover the most premium properties in top locations, curated just for you.
           </p>
+
+          {/* Search Bar Container */}
+          <div className="bg-white/90 backdrop-blur-md p-3 md:p-4 rounded-3xl max-w-4xl mx-auto shadow-2xl animate-[slideUp_0.8s_ease-out_forwards] border border-gray-200">
+            <form action="/properties" method="GET" className="flex flex-col md:flex-row gap-3">
+              <div className="flex-grow flex items-center bg-gray-100/80 rounded-2xl px-4 py-3 focus-within:ring-2 focus-within:ring-primary-500 transition-all">
+                <svg className="w-5 h-5 text-gray-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <input 
+                  type="text" 
+                  name="query"
+                  placeholder="Address, City, or ZIP code" 
+                  className="bg-transparent text-black placeholder-gray-500 focus:outline-none w-full font-bold"
+                />
+              </div>
+              <div className="flex-shrink-0 flex items-center bg-gray-100/80 rounded-2xl px-4 py-3 border-l border-gray-300 md:border-l-0">
+                <select name="category" className="bg-transparent text-black focus:outline-none w-full md:w-36 font-bold appearance-none cursor-pointer">
+                  <option value="ALL" className="text-black">All Types</option>
+                  <option value="HOUSE" className="text-black">Houses</option>
+                  <option value="APARTMENT" className="text-black">Apartments</option>
+                  <option value="COMMERCIAL" className="text-black">Commercial</option>
+                </select>
+                <svg className="w-4 h-4 text-gray-600 ml-2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+              </div>
+              <button type="submit" className="bg-gradient-to-r from-primary-600 to-primary-500 text-white font-bold px-8 py-3.5 rounded-2xl hover:scale-105 btn-transition shadow-lg shadow-primary-600/30">
+                Search
+              </button>
+            </form>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Featured Properties Section */}
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="flex justify-between items-end mb-10">
+          <div className="animate-[slideUp_0.6s_ease-out_forwards]">
+            <span className="text-primary-600 font-bold tracking-wider uppercase text-sm mb-2 block">Handpicked selections</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground">Featured Properties</h2>
+          </div>
+          <Link href="/properties" className="hidden md:flex items-center text-primary-600 font-semibold hover:text-primary-800 transition-colors group">
+            View All 
+            <svg className="w-5 h-5 ml-1 group-hover:translate-x-1 btn-transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+          </Link>
         </div>
-      </main>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {MOCK_PROPERTIES.map((property) => (
+            <PropertyCard key={property.id} property={property} />
+          ))}
+        </div>
+      </section>
+
+      {/* Promotional Banner */}
+      <section className="w-full bg-gradient-to-br from-primary-900 to-foreground py-16 my-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between">
+          <div className="mb-8 md:mb-0 max-w-2xl text-center md:text-left">
+            <h2 className="text-3xl font-bold text-white mb-4">Ready to sell your property?</h2>
+            <p className="text-primary-100 text-lg">List your property with HomeByte and reach millions of potential buyers across the global market immediately.</p>
+          </div>
+          <div>
+            <Link href="/create" className="px-8 py-4 bg-white text-primary-900 font-bold rounded-full shadow-xl hover:shadow-2xl hover:-translate-y-1 btn-transition inline-block">
+              Create Listing
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
