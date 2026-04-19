@@ -1,7 +1,8 @@
 import React from "react";
 import Image from "next/image";
+import SaveToWishlistButton from "@/components/SaveToWishlistButton";
 import Link from "next/link";
-
+import BackButton from "@/components/BackButton";
 export default async function PropertyDetailsPage({
   params,
 }: {
@@ -12,10 +13,7 @@ export default async function PropertyDetailsPage({
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-fade-in">
       <div className="mb-6">
-        <Link href="/properties" className="inline-flex items-center text-sm font-medium text-foreground/60 hover:text-primary-600 btn-transition group">
-          <svg className="w-4 h-4 mr-1 group-hover:-translate-x-1 btn-transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
-          Back to listings
-        </Link>
+        <BackButton />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -29,8 +27,8 @@ export default async function PropertyDetailsPage({
               className="object-cover"
             />
             <div className="absolute top-4 left-4 flex gap-2">
-              <span className="px-4 py-1.5 bg-background/80 backdrop-blur-md rounded-full text-sm font-bold shadow-sm">FOR SALE</span>
-              <span className="px-4 py-1.5 bg-gradient-to-r from-accent-500 to-accent-400 text-white rounded-full text-sm font-bold shadow-sm">FEATURED</span>
+              <span className="px-4 py-1.5 bg-background/80 backdrop-blur-md rounded-full text-sm font-bold shadow-sm">DIJUAL</span>
+              <span className="px-4 py-1.5 bg-gradient-to-r from-accent-500 to-accent-400 text-white rounded-full text-sm font-bold shadow-sm">UNGGULAN</span>
             </div>
           </div>
 
@@ -52,29 +50,29 @@ export default async function PropertyDetailsPage({
             <div className="flex border-y border-border py-6 my-8 overflow-x-auto hide-scrollbar gap-8">
               <div className="flex flex-col items-center min-w-max">
                 <span className="text-3xl font-bold text-foreground">5</span>
-                <span className="text-sm text-foreground/60 uppercase tracking-wide">Bedrooms</span>
+                <span className="text-sm text-foreground/60 uppercase tracking-wide">Kamar Tidur</span>
               </div>
               <div className="w-px h-12 bg-border"></div>
               <div className="flex flex-col items-center min-w-max">
                 <span className="text-3xl font-bold text-foreground">6</span>
-                <span className="text-sm text-foreground/60 uppercase tracking-wide">Bathrooms</span>
+                <span className="text-sm text-foreground/60 uppercase tracking-wide">Kamar Mandi</span>
               </div>
               <div className="w-px h-12 bg-border"></div>
               <div className="flex flex-col items-center min-w-max">
                 <span className="text-3xl font-bold text-foreground">450</span>
-                <span className="text-sm text-foreground/60 uppercase tracking-wide">Sq Meters</span>
+                <span className="text-sm text-foreground/60 uppercase tracking-wide">Meter Persegi</span>
               </div>
               <div className="w-px h-12 bg-border"></div>
               <div className="flex flex-col items-center min-w-max">
                 <span className="text-3xl font-bold text-foreground">House</span>
-                <span className="text-sm text-foreground/60 uppercase tracking-wide">Type</span>
+                <span className="text-sm text-foreground/60 uppercase tracking-wide">Tipe</span>
               </div>
             </div>
 
             <div>
-              <h3 className="text-2xl font-bold text-foreground mb-4">Description</h3>
+              <h3 className="text-2xl font-bold text-foreground mb-4">Deskripsi</h3>
               <p className="text-foreground/70 leading-relaxed font-light text-lg">
-                This stunning modern glass villa situated in the heart of Beverly Hills offers unparalleled luxury and cutting-edge design. Features include huge floor-to-ceiling panoramic windows, an infinity edge pool overlooking the canyon, state-of-the-art smart home integration, and a master suite complete with his-and-hers spa bathrooms.
+                Vila kaca modern yang menakjubkan ini terletak di jantung Beverly Hills, menawarkan kemewahan yang tak tertandingi dan desain mutakhir. Fasilitas termasuk jendela panorama raksasa dari lantai ke langit-langit, kolam renang tanpa batas yang menghadap ke lembah, integrasi rumah pintar tercanggih, dan kamar tidur utama yang dilengkapi dengan kamar mandi spa mewah.
               </p>
             </div>
           </div>
@@ -83,37 +81,34 @@ export default async function PropertyDetailsPage({
         {/* Sidebar / Inquiry Form */}
         <div className="lg:col-span-1">
           <div className="sticky top-28 glass p-6 rounded-3xl shadow-xl border border-border/50 animate-[slideUp_0.8s_ease-out_forwards]">
-            <h3 className="text-xl font-bold text-foreground mb-6">Contact Agent</h3>
+            <h3 className="text-xl font-bold text-foreground mb-6">Hubungi Agen</h3>
             <div className="flex items-center mb-6">
               <div className="w-14 h-14 bg-gradient-to-br from-primary-400 to-accent-500 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-md">
                 JD
               </div>
               <div className="ml-4">
                 <p className="font-bold text-foreground">Jane Doe</p>
-                <p className="text-sm text-foreground/60">Premium Real Estate Agent</p>
+                <p className="text-sm text-foreground/60">Agen Real Estat Premium</p>
               </div>
             </div>
             
             <form className="space-y-4">
               <div>
-                <input type="text" placeholder="Your Name" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" />
+                <input type="text" placeholder="Nama Anda" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" />
               </div>
               <div>
-                <input type="email" placeholder="Email Address" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" />
+                <input type="email" placeholder="Alamat Email" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" />
               </div>
               <div>
-                <input type="tel" placeholder="Phone Number" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" />
+                <input type="tel" placeholder="Nomor Telepon" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" />
               </div>
               <div>
-                <textarea rows={4} placeholder="I am interested in this property..." className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none"></textarea>
+                <textarea rows={4} placeholder="Saya tertarik dengan properti ini..." className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none"></textarea>
               </div>
               <button type="submit" className="w-full py-4 bg-primary-600 text-white rounded-xl font-bold hover:bg-primary-700 hover:shadow-lg hover:shadow-primary-600/30 btn-transition">
-                Send Message
+                Kirim Pesan
               </button>
-              <button type="button" className="w-full py-4 glass text-foreground rounded-xl font-bold hover:bg-foreground/5 btn-transition flex justify-center items-center gap-2">
-                <svg className="w-5 h-5 text-accent-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-                Save to Wishlist
-              </button>
+              <SaveToWishlistButton propertyId={id} />
             </form>
           </div>
         </div>

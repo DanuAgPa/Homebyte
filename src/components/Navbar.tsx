@@ -1,7 +1,40 @@
+"use client";
+
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    // Check cookie
+    const checkAuth = () => {
+      const matchAuth = document.cookie.match(new RegExp('(^| )auth_session=([^;]+)'));
+      const matchRole = document.cookie.match(new RegExp('(^| )user_role=([^;]+)'));
+      
+      if (matchAuth) {
+        setIsLoggedIn(true);
+        if (matchRole && matchRole[2] === "ADMIN") {
+          setIsAdmin(true);
+        }
+      }
+    };
+    
+    checkAuth();
+  }, []);
+
+  const handleLogout = () => {
+    document.cookie = "auth_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    document.cookie = "user_role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    setIsLoggedIn(false);
+    setIsAdmin(false);
+    router.push("/login");
+    router.refresh();
+  };
+
   return (
     <nav className="fixed top-0 w-full z-50 glass border-b border-border transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -20,22 +53,48 @@ export default function Navbar() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
+            <button 
+              onClick={() => router.back()} 
+              className="text-foreground/80 hover:text-primary-500 transition-colors text-sm font-medium"
+            >
+              Kembali
+            </button>
             <Link href="/properties" className="text-foreground/80 hover:text-primary-500 transition-colors text-sm font-medium">
-              Properties
+              Properti
+            </Link>
+            <Link href="/scm" className="text-foreground/80 hover:text-primary-500 transition-colors text-sm font-medium">
+              Proses SCM
             </Link>
             <Link href="/saved" className="text-foreground/80 hover:text-primary-500 transition-colors text-sm font-medium">
-              Wishlist
+              Favorit
             </Link>
+            {isAdmin && (
+              <Link href="/admin" className="text-red-500 font-bold hover:text-red-600 transition-colors text-sm border border-red-200 px-3 py-1 rounded-full bg-red-50">
+                Panel Admin
+              </Link>
+            )}
+            
             <div className="flex items-center space-x-4 pl-4 border-l border-border/50">
-              <Link href="/login" className="text-sm font-medium text-foreground hover:text-primary-500 transition-colors">
-                Sign In
-              </Link>
-              <Link
-                href="/register"
-                className="text-sm font-medium px-5 py-2.5 rounded-full bg-foreground text-background hover:bg-primary-600 hover:text-white btn-transition shadow-md shadow-foreground/10 hover:shadow-primary-600/25"
-              >
-                Sign Up
-              </Link>
+              {isLoggedIn ? (
+                 <button 
+                   onClick={handleLogout}
+                   className="text-sm font-bold text-gray-500 hover:text-red-500 transition-colors"
+                 >
+                   Keluar
+                 </button>
+              ) : (
+                <>
+                  <Link href="/login" className="text-sm font-medium text-foreground hover:text-primary-500 transition-colors">
+                    Masuk
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="text-sm font-medium px-5 py-2.5 rounded-full bg-foreground text-background hover:bg-primary-600 hover:text-white btn-transition shadow-md shadow-foreground/10 hover:shadow-primary-600/25"
+                  >
+                    Daftar
+                  </Link>
+                </>
+              )}
             </div>
           </div>
 

@@ -62,10 +62,10 @@ export default function Home() {
 
         <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-fade-in">
           <h1 className="text-4xl md:text-6xl font-extrabold text-black tracking-tight mb-6 drop-shadow-sm">
-            Find Your Dream <span className="text-primary-600">Home</span> Today.
+            Temukan <span className="text-primary-600">Rumah Idaman</span> Anda.
           </h1>
           <p className="mt-4 text-xl md:text-2xl text-gray-800 max-w-3xl mx-auto mb-10 font-medium drop-shadow-sm">
-            Discover the most premium properties in top locations, curated just for you.
+            Temukan properti paling premium di lokasi terbaik, dikurasi khusus untuk Anda.
           </p>
 
           {/* Search Bar Container */}
@@ -78,21 +78,12 @@ export default function Home() {
                 <input 
                   type="text" 
                   name="query"
-                  placeholder="Address, City, or ZIP code" 
+                  placeholder="Alamat, Kota, atau Kode Pos" 
                   className="bg-transparent text-black placeholder-gray-500 focus:outline-none w-full font-bold"
                 />
               </div>
-              <div className="flex-shrink-0 flex items-center bg-gray-100/80 rounded-2xl px-4 py-3 border-l border-gray-300 md:border-l-0">
-                <select name="category" className="bg-transparent text-black focus:outline-none w-full md:w-36 font-bold appearance-none cursor-pointer">
-                  <option value="ALL" className="text-black">All Types</option>
-                  <option value="HOUSE" className="text-black">Houses</option>
-                  <option value="APARTMENT" className="text-black">Apartments</option>
-                  <option value="COMMERCIAL" className="text-black">Commercial</option>
-                </select>
-                <svg className="w-4 h-4 text-gray-600 ml-2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
-              </div>
               <button type="submit" className="bg-gradient-to-r from-primary-600 to-primary-500 text-white font-bold px-8 py-3.5 rounded-2xl hover:scale-105 btn-transition shadow-lg shadow-primary-600/30">
-                Search
+                Cari
               </button>
             </form>
           </div>
@@ -103,11 +94,11 @@ export default function Home() {
       <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="flex justify-between items-end mb-10">
           <div className="animate-[slideUp_0.6s_ease-out_forwards]">
-            <span className="text-primary-600 font-bold tracking-wider uppercase text-sm mb-2 block">Handpicked selections</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground">Featured Properties</h2>
+            <span className="text-primary-600 font-bold tracking-wider uppercase text-sm mb-2 block">Pilihan terbaik kami</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground">Properti Unggulan</h2>
           </div>
           <Link href="/properties" className="hidden md:flex items-center text-primary-600 font-semibold hover:text-primary-800 transition-colors group">
-            View All 
+            Lihat Semua 
             <svg className="w-5 h-5 ml-1 group-hover:translate-x-1 btn-transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
           </Link>
         </div>
@@ -123,12 +114,12 @@ export default function Home() {
       <section className="w-full bg-gradient-to-br from-primary-900 to-foreground py-16 my-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between">
           <div className="mb-8 md:mb-0 max-w-2xl text-center md:text-left">
-            <h2 className="text-3xl font-bold text-white mb-4">Ready to sell your property?</h2>
-            <p className="text-primary-100 text-lg">List your property with HomeByte and reach millions of potential buyers across the global market immediately.</p>
+            <h2 className="text-3xl font-bold text-white mb-4">Siap menjual properti Anda?</h2>
+            <p className="text-primary-100 text-lg">Daftarkan properti Anda di HomeByte dan jangkau jutaan calon pembeli di pasar global secara instan.</p>
           </div>
           <div>
             <Link href="/create" className="px-8 py-4 bg-white text-primary-900 font-bold rounded-full shadow-xl hover:shadow-2xl hover:-translate-y-1 btn-transition inline-block">
-              Create Listing
+              Buat Iklan
             </Link>
           </div>
         </div>

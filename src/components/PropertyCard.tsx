@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -17,19 +19,45 @@ export interface PropertyData {
 }
 
 export default function PropertyCard({ property }: { property: PropertyData }) {
+  const [isSaved, setIsSaved] = useState(false);
+
+  useEffect(() => {
+    const savedItems = JSON.parse(localStorage.getItem("homebyte_wishlist") || "[]");
+    const isCurrentlySaved = savedItems.some((item: PropertyData) => item.id === property.id);
+    setIsSaved(isCurrentlySaved);
+  }, [property.id]);
+
+  const handleWishlist = () => {
+    const savedItems = JSON.parse(localStorage.getItem("homebyte_wishlist") || "[]");
+    if (isSaved) {
+      const updatedItems = savedItems.filter((item: PropertyData) => item.id !== property.id);
+      localStorage.setItem("homebyte_wishlist", JSON.stringify(updatedItems));
+      setIsSaved(false);
+      alert("Properti dihapus dari Wishlist.");
+    } else {
+      localStorage.setItem("homebyte_wishlist", JSON.stringify([...savedItems, property]));
+      setIsSaved(true);
+      alert("Properti berhasil ditambahkan ke Wishlist!");
+    }
+  };
+
   return (
     <div className="group relative bg-card text-card-foreground rounded-2xl overflow-hidden glass border border-border shadow-sm card-hover animate-[slideUp_0.5s_ease-out_forwards]">
       {/* Image Container */}
       <div className="relative aspect-[4/3] w-full overflow-hidden">
         {property.isFeatured && (
           <div className="absolute top-4 left-4 z-10 px-3 py-1 bg-gradient-to-r from-accent-500 to-accent-400 text-white text-xs font-bold rounded-full shadow-md uppercase tracking-wider">
-            Featured
+            Unggulan
           </div>
         )}
         <div className="absolute top-4 right-4 z-10">
-          <button className="p-2 rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-md transition-colors shadow-sm focus:outline-none">
-            {/* Heart Icon for 'Save' action (dummy client UI for now) */}
-            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <button 
+            onClick={handleWishlist}
+            title="Tambah ke Wishlist"
+            className="p-2 rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-md transition-colors shadow-sm focus:outline-none"
+          >
+            {/* Heart Icon */}
+            <svg className={`w-5 h-5 ${isSaved ? "text-red-500 fill-current" : "text-white"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
             </svg>
           </button>
@@ -70,16 +98,16 @@ export default function PropertyCard({ property }: { property: PropertyData }) {
         
         <div className="flex justify-between items-center border-t border-border pt-4 mt-2">
           <div>
-            <p className="text-xs text-foreground/50 uppercase tracking-wider mb-0.5">Price</p>
+            <p className="text-xs text-foreground/50 uppercase tracking-wider mb-0.5">Harga</p>
             <p className="text-xl font-bold text-primary-600">
-              ${property.price.toLocaleString()}
+              ${property.price.toLocaleString("en-US")}
             </p>
           </div>
           <Link
             href={`/properties/${property.id}`}
             className="text-sm px-4 py-2 bg-primary-50 text-primary-600 hover:bg-primary-600 hover:text-white rounded-xl font-semibold btn-transition"
           >
-            Details
+            Detail
           </Link>
         </div>
       </div>
