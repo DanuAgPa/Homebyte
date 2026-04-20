@@ -7,21 +7,23 @@ datasource db {
 }
 
 model User {
-  id              String          @id @default(uuid())
+  id              Int             @id @default(autoincrement())
   name            String
   email           String          @unique
   password        String
   role            Role            @default(USER)
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
-  savedProperties SavedProperty[]
+  phone           String?
+  bio             String?
   inquiries       Inquiry[]
+  savedProperties SavedProperty[]
 
   @@map("users")
 }
 
 model Property {
-  id              String          @id @default(uuid())
+  id              Int             @id @default(autoincrement())
   title           String
   description     String
   price           Float
@@ -35,33 +37,33 @@ model Property {
   isFeatured      Boolean         @default(false)
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
-  savedByUsers    SavedProperty[]
   inquiries       Inquiry[]
+  savedByUsers    SavedProperty[]
 
   @@map("properties")
 }
 
 model SavedProperty {
-  id         String   @id @default(uuid())
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     String
-  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  propertyId String
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  propertyId Int
   savedAt    DateTime @default(now())
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, propertyId])
   @@map("saved_properties")
 }
 
 model Inquiry {
-  id          String   @id @default(uuid())
+  id          Int       @id @default(autoincrement())
   message     String
   contactDate DateTime?
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
-  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  propertyId  String
-  createdAt   DateTime @default(now())
+  userId      Int?
+  propertyId  Int?
+  createdAt   DateTime  @default(now())
+  property    Property? @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  user        User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("inquiries")
 }

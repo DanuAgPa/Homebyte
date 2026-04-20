@@ -1,8 +1,8 @@
 import React from "react";
 import Image from "next/image";
-import SaveToWishlistButton from "@/components/SaveToWishlistButton";
-import Link from "next/link";
+import InquiryForm from "@/components/InquiryForm";
 import BackButton from "@/components/BackButton";
+
 export default async function PropertyDetailsPage({
   params,
 }: {
@@ -19,7 +19,7 @@ export default async function PropertyDetailsPage({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
         {/* Main Details */}
         <div className="lg:col-span-2 space-y-8">
-          <div className="w-full h-[500px] relative rounded-3xl overflow-hidden shadow-2xl animate-[slideUp_0.5s_ease-out_forwards]">
+          <div className="w-full h-[500px] relative rounded-3xl overflow-hidden shadow-2xl">
             <Image 
               src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80" 
               alt="Property" 
@@ -80,37 +80,7 @@ export default async function PropertyDetailsPage({
 
         {/* Sidebar / Inquiry Form */}
         <div className="lg:col-span-1">
-          <div className="sticky top-28 glass p-6 rounded-3xl shadow-xl border border-border/50 animate-[slideUp_0.8s_ease-out_forwards]">
-            <h3 className="text-xl font-bold text-foreground mb-6">Hubungi Agen</h3>
-            <div className="flex items-center mb-6">
-              <div className="w-14 h-14 bg-gradient-to-br from-primary-400 to-accent-500 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-md">
-                JD
-              </div>
-              <div className="ml-4">
-                <p className="font-bold text-foreground">Jane Doe</p>
-                <p className="text-sm text-foreground/60">Agen Real Estat Premium</p>
-              </div>
-            </div>
-            
-            <form className="space-y-4">
-              <div>
-                <input type="text" placeholder="Nama Anda" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" />
-              </div>
-              <div>
-                <input type="email" placeholder="Alamat Email" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" />
-              </div>
-              <div>
-                <input type="tel" placeholder="Nomor Telepon" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" />
-              </div>
-              <div>
-                <textarea rows={4} placeholder="Saya tertarik dengan properti ini..." className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none"></textarea>
-              </div>
-              <button type="submit" className="w-full py-4 bg-primary-600 text-white rounded-xl font-bold hover:bg-primary-700 hover:shadow-lg hover:shadow-primary-600/30 btn-transition">
-                Kirim Pesan
-              </button>
-              <SaveToWishlistButton propertyId={id} />
-            </form>
-          </div>
+          <InquiryForm propertyId={id} />
         </div>
       </div>
     </div>
