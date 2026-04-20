@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import BackButton from "@/components/BackButton";
 import { loginAction } from "@/lib/actions/authActions";
 
 export default function LoginPage() {
@@ -39,9 +38,6 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[90vh] bg-gray-50 px-4 py-8 relative">
-      <div className="absolute top-6 left-6 md:top-10 md:left-10">
-        <BackButton />
-      </div>
 
       <div className="w-full max-w-md bg-white p-8 rounded-3xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] border border-gray-100">
         <div className="text-center mb-8">

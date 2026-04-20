@@ -61,7 +61,7 @@ export default function InquiryForm({ propertyId }: InquiryFormProps) {
             required
             type="text" 
             placeholder="Nama Anda" 
-            className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" 
+            className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all !text-gray-900 placeholder:text-gray-400" 
           />
         </div>
         <div>
@@ -70,7 +70,7 @@ export default function InquiryForm({ propertyId }: InquiryFormProps) {
             required
             type="email" 
             placeholder="Alamat Email" 
-            className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" 
+            className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all !text-gray-900 placeholder:text-gray-400" 
           />
         </div>
         <div>
@@ -79,7 +79,7 @@ export default function InquiryForm({ propertyId }: InquiryFormProps) {
             required
             type="tel" 
             placeholder="Nomor Telepon" 
-            className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all" 
+            className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all !text-gray-900 placeholder:text-gray-400" 
           />
         </div>
         <div>
@@ -88,7 +88,7 @@ export default function InquiryForm({ propertyId }: InquiryFormProps) {
             required
             rows={4} 
             placeholder="Saya tertarik dengan properti ini..." 
-            className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none"
+            className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all !text-gray-900 placeholder:text-gray-400 resize-none"
           ></textarea>
         </div>
         

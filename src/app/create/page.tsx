@@ -54,11 +54,11 @@ export default function CreateListingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-foreground mb-2">Judul Properti</label>
-                <input name="title" required type="text" placeholder="misal: Vila Modern di Pusat Kota" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all" />
+                <input name="title" required type="text" placeholder="misal: Vila Modern di Pusat Kota" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all !text-gray-900 placeholder:text-gray-400" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Kategori</label>
-                <select name="category" required className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all appearance-none cursor-pointer">
+                <select name="category" required className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all appearance-none cursor-pointer !text-gray-900">
                   <option value="HOUSE">Rumah</option>
                   <option value="APARTMENT">Apartemen</option>
                   <option value="LAND">Tanah</option>
@@ -66,8 +66,8 @@ export default function CreateListingPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Harga ($)</label>
-                <input name="price" required type="number" placeholder="450000" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all" />
+                <label className="block text-sm font-medium text-foreground mb-2">Harga</label>
+                <input name="price" required type="number" placeholder="450000" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all !text-gray-900 placeholder:text-gray-400" />
               </div>
             </div>
           </div>
@@ -78,11 +78,11 @@ export default function CreateListingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-foreground mb-2">Alamat</label>
-                <input name="address" required type="text" placeholder="Jl. Utama No. 123" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all" />
+                <input name="address" required type="text" placeholder="Jl. Utama No. 123" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all !text-gray-900 placeholder:text-gray-400" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Kota</label>
-                <input name="city" required type="text" placeholder="Jakarta, Indonesia" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all" />
+                <input name="city" required type="text" placeholder="Jakarta, Indonesia" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all !text-gray-900 placeholder:text-gray-400" />
               </div>
             </div>
           </div>
@@ -93,15 +93,15 @@ export default function CreateListingPage() {
             <div className="grid grid-cols-3 gap-6">
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Kamar Tidur</label>
-                <input name="bedrooms" required type="number" min="0" placeholder="3" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all" />
+                <input name="bedrooms" required type="number" min="0" placeholder="3" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all !text-gray-900 placeholder:text-gray-400" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Kamar Mandi</label>
-                <input name="bathrooms" required type="number" min="0" placeholder="2" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all" />
+                <input name="bathrooms" required type="number" min="0" placeholder="2" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all !text-gray-900 placeholder:text-gray-400" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Luas (m²)</label>
-                <input name="area" required type="number" min="0" placeholder="150" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all" />
+                <input name="area" required type="number" min="0" placeholder="150" className="w-full px-4 py-3 bg-background border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all !text-gray-900 placeholder:text-gray-400" />
               </div>
             </div>
           </div>

@@ -1,52 +1,14 @@
 import React from "react";
 import Link from "next/link";
-import PropertyCard, { PropertyData } from "@/components/PropertyCard";
-import { searchProperties } from "@/lib/actions/propertyActions";
+import PropertyCard from "@/components/PropertyCard";
+import prisma from "@/lib/prisma";
 
-// Mock data to display before real database is populated
-const MOCK_PROPERTIES: PropertyData[] = [
-  {
-    id: "1",
-    title: "Modern Glass Villa in Beverly Hills",
-    price: 4500000,
-    address: "123 Palm Ave",
-    city: "Beverly Hills, CA",
-    bedrooms: 5,
-    bathrooms: 6,
-    areaSquareMeter: 450,
-    imageUrl: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=80",
-    isFeatured: true,
-    category: "HOUSE"
-  },
-  {
-    id: "2",
-    title: "Luxury Penthouse with Skyline View",
-    price: 2100000,
-    address: "88 Downtown Blvd",
-    city: "New York, NY",
-    bedrooms: 3,
-    bathrooms: 3,
-    areaSquareMeter: 220,
-    imageUrl: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80",
-    isFeatured: true,
-    category: "APARTMENT"
-  },
-  {
-    id: "3",
-    title: "Minimalist Smart Home Retreat",
-    price: 1850000,
-    address: "450 Pine Lane",
-    city: "Austin, TX",
-    bedrooms: 4,
-    bathrooms: 3,
-    areaSquareMeter: 310,
-    imageUrl: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=80",
-    isFeatured: false,
-    category: "HOUSE"
-  }
-];
+export default async function Home() {
+  const properties = await prisma.property.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 6
+  });
 
-export default function Home() {
   return (
     <div className="flex flex-col items-center w-full min-h-screen">
       {/* Hero Section */}
@@ -71,15 +33,15 @@ export default function Home() {
           {/* Search Bar Container */}
           <div className="bg-white/90 backdrop-blur-md p-3 md:p-4 rounded-3xl max-w-4xl mx-auto shadow-2xl animate-[slideUp_0.8s_ease-out_forwards] border border-gray-200">
             <form action="/properties" method="GET" className="flex flex-col md:flex-row gap-3">
-              <div className="flex-grow flex items-center bg-gray-100/80 rounded-2xl px-4 py-3 focus-within:ring-2 focus-within:ring-primary-500 transition-all">
-                <svg className="w-5 h-5 text-gray-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex-grow flex items-center bg-white rounded-2xl px-4 py-3 focus-within:ring-2 focus-within:ring-primary-500 transition-all border border-gray-200 shadow-sm">
+                <svg className="w-5 h-5 text-gray-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
                 <input 
                   type="text" 
                   name="query"
                   placeholder="Alamat, Kota, atau Kode Pos" 
-                  className="bg-transparent text-black placeholder-gray-500 focus:outline-none w-full font-bold"
+                  className="bg-transparent !text-gray-900 placeholder-gray-400 focus:outline-none w-full font-bold"
                 />
               </div>
               <button type="submit" className="bg-gradient-to-r from-primary-600 to-primary-500 text-white font-bold px-8 py-3.5 rounded-2xl hover:scale-105 btn-transition shadow-lg shadow-primary-600/30">
@@ -95,7 +57,7 @@ export default function Home() {
         <div className="flex justify-between items-end mb-10">
           <div className="animate-[slideUp_0.6s_ease-out_forwards]">
             <span className="text-primary-600 font-bold tracking-wider uppercase text-sm mb-2 block">Pilihan terbaik kami</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground">Properti Unggulan</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground">Properti Terbaru</h2>
           </div>
           <Link href="/properties" className="hidden md:flex items-center text-primary-600 font-semibold hover:text-primary-800 transition-colors group">
             Lihat Semua 
@@ -104,9 +66,15 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {MOCK_PROPERTIES.map((property) => (
-            <PropertyCard key={property.id} property={property} />
-          ))}
+          {properties.length > 0 ? (
+            properties.map((property) => (
+              <PropertyCard key={property.id} property={property as any} />
+            ))
+          ) : (
+            <div className="col-span-full py-20 text-center text-gray-500 italic">
+              Belum ada properti yang tersedia.
+            </div>
+          )}
         </div>
       </section>
 

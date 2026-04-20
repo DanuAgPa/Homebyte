@@ -18,12 +18,21 @@ export async function registerAction(formData: FormData) {
 
   try {
     const existingUser = await prisma.user.findUnique({ where: { email } });
-    if (existingUser) return { success: false, error: "Email sudah terdaftar" };
+    if (existingUser) return { success: false, error: "Email sudah digunakan" };
     
     const hashedPassword = await bcrypt.hash(password, 10);
-    const role = email.toLowerCase().includes("admin") ? "ADMIN" : "USER";
+    const role = (email.toLowerCase().includes("admin") || email.toLowerCase().includes("sisteminte")) ? "ADMIN" : "USER";
+    
+    // Buat user baru dengan field profile default
     const user = await prisma.user.create({
-      data: { name, email, password: hashedPassword, role },
+      data: { 
+        name, 
+        email, 
+        password: hashedPassword, 
+        role: role as any,
+        phone: "", 
+        bio: "" 
+      },
     });
 
     const cookieStore = await cookies();
@@ -102,5 +111,72 @@ export async function updateProfileAction(formData: FormData) {
   } catch (error: any) {
     console.error("Update Profile Error:", error);
     return { success: false, error: error.message || "Failed to update profile" };
+  }
+}
+
+import { checkAdmin } from "@/lib/auth-utils";
+
+async function dummy() {} // Placeholder for structure if needed after deletions
+
+export async function getAllUsersAction() {
+  try {
+    return await prisma.user.findMany({
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        phone: true,
+        createdAt: true
+      }
+    });
+  } catch (error: any) {
+    console.error("Get Users Error:", error);
+    return [];
+  }
+}
+
+export async function deleteUserAction(id: number) {
+  try {
+    const admin = await checkAdmin();
+    if (!admin) return { success: false, error: "Unauthorized: Only admin@gmail.com can delete users." };
+
+    const userToDelete = await prisma.user.findUnique({ where: { id } });
+    if (userToDelete?.email === "admin@gmail.com") {
+      return { success: false, error: "Cannot delete the primary admin account." };
+    }
+
+    await prisma.user.delete({ where: { id } });
+    revalidatePath("/admin/users");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Delete User Error:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function toggleUserRoleAction(id: number) {
+  try {
+    const admin = await checkAdmin();
+    if (!admin) return { success: false, error: "Unauthorized: Only admin@gmail.com can manage roles." };
+
+    const user = await prisma.user.findUnique({ where: { id } });
+    if (!user) return { success: false, error: "User not found" };
+    
+    if (user.email === "admin@gmail.com") return { success: false, error: "Cannot change role of primary admin" };
+
+    const newRole = user.role === "ADMIN" ? "USER" : "ADMIN";
+    
+    await prisma.user.update({
+      where: { id },
+      data: { role: newRole as any }
+    });
+
+    revalidatePath("/admin/users");
+    return { success: true, newRole };
+  } catch (error: any) {
+    console.error("Toggle Role Error:", error);
+    return { success: false, error: error.message };
   }
 }

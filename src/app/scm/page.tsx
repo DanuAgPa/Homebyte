@@ -1,25 +1,28 @@
 import React from "react";
 import Link from "next/link";
-import BackButton from "@/components/BackButton";
+import { Package } from "lucide-react";
 
 export default function SCMPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         
-        <div className="mb-6">
-          {/* Implementasi Solid Back Button di halaman SCM */}
-          <BackButton /> 
-        </div>
-        
-        <div className="bg-white rounded-3xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] p-8 md:p-12 border border-gray-100 relative overflow-hidden">
+        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-10 md:p-20 relative overflow-hidden">
           
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary-100 rounded-full mix-blend-multiply filter blur-3xl opacity-50 -translate-y-1/2 translate-x-1/2"></div>
+          <div className="absolute top-0 right-0 w-64 h-64 bg-primary-50 rounded-full mix-blend-multiply filter blur-3xl opacity-30 -translate-y-1/2 translate-x-1/2"></div>
           
           <div className="relative z-10">
-            <h1 className="text-4xl md:text-5xl font-extrabold text-black mb-6 tracking-tight">Manajemen Rantai Pasok (SCM) Properti</h1>
-            <p className="text-xl text-gray-600 mb-12 font-medium leading-relaxed border-l-4 border-primary-500 pl-4">
-              Kami memastikan transparansi, efisiensi waktu, dan keunggulan kualitas dari pengadaan bahan baku hingga penyerahan kunci di tangan pelanggan yang terakreditasi lewat sistem tata kelola modern kami.
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-3 bg-primary-100 text-primary-600 rounded-2xl">
+                <Package className="w-6 h-6" />
+              </div>
+              <h1 className="text-4xl md:text-5xl font-black text-black tracking-tighter">Layanan SCM</h1>
+            </div>
+            
+            <div className="w-20 h-1.5 bg-primary-500 rounded-full mb-10"></div>
+
+            <p className="text-xl text-gray-500 mb-16 font-medium leading-relaxed max-w-3xl">
+              Kami memastikan transparansi, efisiensi waktu, dan keunggulan kualitas dari pengadaan bahan baku hingga penyerahan kunci di tangan pelanggan melalui sistem tata kelola modern kami.
             </p>
 
             <div className="space-y-8">

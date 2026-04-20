@@ -1,126 +1,165 @@
 import React from "react";
+import prisma from "@/lib/prisma";
+import Link from "next/link";
+import { ArrowRight, Package, Users, Home, Clock, ChevronRight } from "lucide-react";
+import { checkAdmin } from "@/lib/auth-utils";
+import { redirect } from "next/navigation";
 
-export default function AdminDashboardPage() {
+export default async function AdminDashboardPage() {
+  const admin = await checkAdmin();
+  if (!admin) redirect("/login");
+
+  // Fetch Stats
+  const [propCount, userCount, supplierCount, inventoryCount, shipmentCount] = await Promise.all([
+    prisma.property.count(),
+    prisma.user.count(),
+    prisma.supplier.count(),
+    prisma.inventory.count(),
+    prisma.shipment.count(),
+  ]);
+
+  // Fetch Recents
+  const [recentUsers, recentProperties, recentShipments] = await Promise.all([
+    prisma.user.findMany({ orderBy: { createdAt: "desc" }, take: 5 }),
+    prisma.property.findMany({ orderBy: { createdAt: "desc" }, take: 5 }),
+    prisma.shipment.findMany({ 
+      include: { property: true },
+      orderBy: { updatedAt: "desc" }, 
+      take: 5 
+    }),
+  ]);
+
   return (
-    <div className="w-full animate-fade-in">
-      <div className="flex justify-between items-center mb-10">
+    <div className="w-full animate-fade-in space-y-12">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl md:text-4xl font-extrabold text-black mb-2">Ikhtisar Panel Admin</h1>
-          <p className="text-gray-600 font-medium tracking-wide">Kelola inventaris properti, pendaftar, dan alur SCM Anda hari ini.</p>
+          <h1 className="text-4xl font-black text-gray-900 mb-2 tracking-tight">Dashboard Overview</h1>
+          <p className="text-gray-500 font-medium">Selamat datang, <span className="text-primary-600 font-bold">{admin.email}</span>. Berikut ringkasan platform hari ini.</p>
         </div>
-        <div className="hidden md:flex bg-white px-4 py-2 rounded-full border border-gray-200 shadow-sm items-center">
-          <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-          <span className="text-sm font-bold text-gray-700">Sistem Berjalan</span>
-        </div>
-      </div>
-
-      {/* Cards Laporan */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-          <p className="text-gray-500 font-semibold mb-1">Total Properti</p>
-          <div className="text-4xl font-extrabold text-black">128</div>
-          <div className="mt-4 flex items-center text-sm text-green-600 font-bold">
-            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
-            +12 hari ini
-          </div>
-        </div>
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-          <p className="text-gray-500 font-semibold mb-1">Pengguna Terdaftar</p>
-          <div className="text-4xl font-extrabold text-black">3,492</div>
-          <div className="mt-4 flex items-center text-sm text-green-600 font-bold">
-            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
-            +45 minggu ini
-          </div>
-        </div>
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-          <p className="text-gray-500 font-semibold mb-1">Unit SCM (Tahap Konstruksi)</p>
-          <div className="text-4xl font-extrabold text-black">12</div>
-          <div className="mt-4 flex items-center text-sm text-orange-500 font-bold">
-            Proses Audit Berjalan
-          </div>
+        <div className="flex bg-white px-6 py-3 rounded-2xl border border-primary-50 shadow-sm items-center">
+          <div className="w-2.5 h-2.5 bg-green-500 rounded-full mr-3 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]"></div>
+          <span className="text-sm font-black text-gray-700 tracking-wide uppercase">System Healthy</span>
         </div>
       </div>
 
-      {/* Tabel Data Dummy */}
-      <div className="space-y-8">
-        
-        {/* Tabel 1: Properti */}
-        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-            <h3 className="font-bold text-gray-800">Menunggu Terbit (Properti Dummy)</h3>
-            <button className="text-sm text-primary-600 font-bold hover:underline">Lihat Semua</button>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-gray-500">
-              <thead className="bg-gray-50 text-gray-700 uppercase bg-gray-50/50">
-                <tr>
-                  <th scope="col" className="px-6 py-4 rounded-tl-xl font-bold">Nama Properti</th>
-                  <th scope="col" className="px-6 py-4 font-bold">Kategori</th>
-                  <th scope="col" className="px-6 py-4 font-bold">Lokasi</th>
-                  <th scope="col" className="px-6 py-4 font-bold">Harga</th>
-                  <th scope="col" className="px-6 py-4 rounded-tr-xl font-bold">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="bg-white border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
-                  <td className="px-6 py-4 font-bold text-gray-900">Modern Glass Villa</td>
-                  <td className="px-6 py-4 font-medium text-gray-700">HOUSE</td>
-                  <td className="px-6 py-4">Beverly Hills, CA</td>
-                  <td className="px-6 py-4 font-bold text-gray-700">$4,500,000</td>
-                  <td className="px-6 py-4">
-                    <span className="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full">TERBIT</span>
-                  </td>
-                </tr>
-                <tr className="bg-white border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
-                  <td className="px-6 py-4 font-bold text-gray-900">Luxury Penthouse</td>
-                  <td className="px-6 py-4 font-medium text-gray-700">APARTMENT</td>
-                  <td className="px-6 py-4">New York, NY</td>
-                  <td className="px-6 py-4 font-bold text-gray-700">$2,100,000</td>
-                  <td className="px-6 py-4">
-                    <span className="bg-orange-100 text-orange-800 text-xs font-bold px-3 py-1 rounded-full">DRAFT</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Tabel 2: Pendaftar */}
-        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-            <h3 className="font-bold text-gray-800">5 Pendaftar Terakhir (User Mockup)</h3>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm text-gray-500">
-              <thead className="bg-gray-50 text-gray-700 uppercase bg-gray-50/50">
-                <tr>
-                  <th scope="col" className="px-6 py-4 font-bold">Nama Lengkap</th>
-                  <th scope="col" className="px-6 py-4 font-bold">Email</th>
-                  <th scope="col" className="px-6 py-4 font-bold">Role Hak Akses</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="bg-white border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
-                  <td className="px-6 py-4 font-bold text-gray-900">Danu Developer</td>
-                  <td className="px-6 py-4">admin@homebyte.com</td>
-                  <td className="px-6 py-4">
-                    <span className="bg-red-100 text-red-800 text-xs font-bold px-3 py-1 rounded-full border border-red-200">ADMIN</span>
-                  </td>
-                </tr>
-                <tr className="bg-white border-b border-gray-50 hover:bg-gray-50/50 transition-colors">
-                  <td className="px-6 py-4 font-bold text-gray-900">Jane Smith</td>
-                  <td className="px-6 py-4">jane.user@gmail.com</td>
-                  <td className="px-6 py-4">
-                    <span className="bg-gray-100 text-gray-600 text-xs font-bold px-3 py-1 rounded-full border border-gray-200">USER</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <StatCard 
+          title="Unit Properti" 
+          value={propCount} 
+          icon={<Home className="w-6 h-6 text-primary-600" />}
+          bgColor="bg-primary-50"
+          link="/admin/properties"
+        />
+        <StatCard 
+          title="Total Pengguna" 
+          value={userCount} 
+          icon={<Users className="w-6 h-6 text-orange-600" />}
+          bgColor="bg-orange-50"
+          link="/admin/users"
+        />
+        <StatCard 
+          title="Rantai Pasok (SCM)" 
+          value={inventoryCount + shipmentCount} 
+          icon={<Package className="w-6 h-6 text-blue-600" />}
+          bgColor="bg-blue-50"
+          link="/admin/scm"
+          footer="Audit & Logistik"
+        />
       </div>
 
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        {/* Recent Users List */}
+        <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden">
+          <div className="p-8 border-b border-gray-50 flex justify-between items-center bg-gray-50/30">
+            <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+              <Clock className="w-5 h-5 text-gray-400" />
+              Pendaftar Terbaru
+            </h3>
+            <Link href="/admin/users" className="text-sm font-black text-primary-600 hover:underline flex items-center gap-1 uppercase tracking-widest">
+              Kelola <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <div className="divide-y divide-gray-50">
+            {recentUsers.map((u: any) => (
+              <div key={u.id} className="p-6 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center font-bold text-gray-500">{u.name.charAt(0)}</div>
+                  <div>
+                    <p className="font-bold text-gray-900">{u.name}</p>
+                    <p className="text-xs text-gray-400">{u.email}</p>
+                  </div>
+                </div>
+                <div className={`px-3 py-1 rounded-full text-[10px] font-black uppercase ${u.role === 'ADMIN' ? 'bg-red-50 text-red-600' : 'bg-gray-100 text-gray-500'}`}>
+                  {u.role}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Recent Shipments List (SCM Management) */}
+        <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden">
+          <div className="p-8 border-b border-gray-50 flex justify-between items-center bg-gray-50/30">
+            <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+              <Package className="w-5 h-5 text-gray-400" />
+              Logistik Terkini
+            </h3>
+            <Link href="/admin/scm" className="text-sm font-black text-primary-600 hover:underline flex items-center gap-1 uppercase tracking-widest">
+              Pantau SCM <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <div className="divide-y divide-gray-50">
+            {recentShipments.length > 0 ? recentShipments.map((s: any) => (
+              <div key={s.id} className="p-6 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                <div className="flex items-center gap-4">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold overflow-hidden ${s.status === 'DELIVERED' ? 'bg-green-50 text-green-600' : 'bg-orange-50 text-orange-600'}`}>
+                    <Package className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-900 line-clamp-1">{s.property.title}</p>
+                    <p className="text-xs text-gray-400 uppercase font-black tracking-tighter">{s.status}</p>
+                  </div>
+                </div>
+                <div className="text-[10px] font-black text-gray-400 uppercase">
+                  {new Date(s.estimatedDate).toLocaleDateString('id-ID')}
+                </div>
+              </div>
+            )) : (
+              <div className="p-12 text-center text-gray-400 italic">Belum ada aktivitas pengiriman.</div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StatCard({ title, value, icon, bgColor, footer, link }: any) {
+  return (
+    <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-gray-100 hover:shadow-2xl transition-all duration-500 group relative overflow-hidden">
+      <div className="absolute top-0 right-0 p-8 opacity-[0.03] group-hover:scale-125 transition-transform duration-700">
+         {icon}
+      </div>
+      <div className="flex justify-between items-start mb-10">
+        <div className={`p-5 ${bgColor} rounded-2xl shadow-inner group-hover:rotate-6 transition-all`}>
+          {icon}
+        </div>
+        {link && (
+          <Link href={link} className="p-3 bg-gray-50 hover:bg-gray-900 hover:text-white rounded-2xl text-gray-400 transition-all shadow-sm">
+            <ArrowRight className="w-6 h-6" />
+          </Link>
+        )}
+      </div>
+      <div>
+        <p className="text-gray-400 font-black text-xs uppercase tracking-[0.2em] mb-2">{title}</p>
+        <div className="text-6xl font-black text-gray-900 leading-none tracking-tighter">{Intl.NumberFormat('en-US').format(value)}</div>
+      </div>
+      {footer && (
+        <div className="mt-8 pt-8 border-t border-gray-50 flex items-center text-xs text-gray-400 font-bold uppercase tracking-widest">
+           {footer}
+        </div>
+      )}
     </div>
   );
 }

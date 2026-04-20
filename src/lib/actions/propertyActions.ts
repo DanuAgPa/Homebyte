@@ -1,5 +1,8 @@
+"use server";
+
 import { revalidatePath } from "next/cache";
 import prisma from "@/lib/prisma";
+import { checkAdmin } from "@/lib/auth-utils";
 
 export interface PropertyData {
   title: string;
@@ -31,7 +34,8 @@ export async function searchProperties(formData: FormData) {
 
 export async function createPropertyAction(data: PropertyData) {
   try {
-    console.log("Backend Action: Creating property:", data.title);
+    const admin = await checkAdmin();
+    if (!admin) return { success: false, error: "Unauthorized: Only admin@gmail.com can create properties." };
 
     const property = await prisma.property.create({
       data: {
@@ -125,5 +129,64 @@ export async function injectDummyPropertiesAction() {
   } catch (error: any) {
     console.error("Failed to inject dummy data:", error);
     return { success: false, error: error.message };
+  }
+}
+
+export async function updatePropertyAction(id: number, data: PropertyData) {
+  try {
+    const admin = await checkAdmin();
+    if (!admin) return { success: false, error: "Unauthorized: Only admin@gmail.com can edit properties." };
+
+    const property = await prisma.property.update({
+      where: { id },
+      data: {
+        title: data.title,
+        description: data.description,
+        price: data.price,
+        address: data.address,
+        city: data.city,
+        category: data.category,
+        bedrooms: data.bedrooms,
+        bathrooms: data.bathrooms,
+        areaSquareMeter: data.areaSquareMeter,
+        imageUrl: data.imageUrl,
+      },
+    });
+
+    revalidatePath("/admin");
+    revalidatePath("/properties");
+    revalidatePath("/");
+
+    return { success: true, id: property.id };
+  } catch (error: any) {
+    console.error("Failed to update property:", error);
+    return { success: false, error: error.message || "Failed to update listing" };
+  }
+}
+
+export async function deletePropertyAction(id: number) {
+  try {
+    const admin = await checkAdmin();
+    if (!admin) return { success: false, error: "Unauthorized: Only admin@gmail.com can delete properties." };
+
+    await prisma.property.delete({ where: { id } });
+    revalidatePath("/admin/properties");
+    revalidatePath("/properties");
+    revalidatePath("/");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Failed to delete property:", error);
+    return { success: false, error: error.message || "Failed to delete listing" };
+  }
+}
+
+export async function getAllPropertiesAction() {
+  try {
+    return await prisma.property.findMany({
+      orderBy: { createdAt: "desc" }
+    });
+  } catch (error: any) {
+    console.error("Get Properties Error:", error);
+    return [];
   }
 }

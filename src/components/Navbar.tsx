@@ -10,7 +10,6 @@ export default function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [userName, setUserName] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
@@ -23,10 +22,8 @@ export default function Navbar() {
     if (matchAuth) {
       setIsLoggedIn(true);
       if (matchName) setUserName(decodeURIComponent(matchName[2]));
-      if (matchRole && matchRole[2] === "ADMIN") setIsAdmin(true);
     } else {
       setIsLoggedIn(false);
-      setIsAdmin(false);
       setUserName("");
     }
   };
@@ -46,11 +43,16 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     setIsLoggedIn(false);
-    setIsAdmin(false);
     setUserName("");
     setIsDropdownOpen(false);
     await logoutAction();
   };
+
+  const isAuthPage = pathname === "/login" || pathname === "/register";
+
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   return (
     <nav className="fixed top-0 w-full z-50 glass border-b border-border transition-all duration-300">
@@ -67,41 +69,41 @@ export default function Navbar() {
               </span>
             </Link>
 
-            <div className="h-6 w-[1px] bg-border hidden md:block"></div>
+            {!isAuthPage && (
+              <>
+                <div className="h-6 w-[1px] bg-border hidden md:block"></div>
 
-            <button 
-              onClick={() => router.back()} 
-              className="hidden md:flex items-center gap-1.5 text-foreground/70 hover:text-primary-600 transition-all duration-300 text-sm font-medium group"
-            >
-              <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              <span>Kembali</span>
-            </button>
+                <button 
+                  onClick={() => router.back()} 
+                  className="hidden md:flex items-center gap-1.5 text-foreground/70 hover:text-primary-600 transition-all duration-300 text-sm font-medium group"
+                >
+                  <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                  <span>Kembali</span>
+                </button>
+              </>
+            )}
           </div>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center gap-8">
-            <div className="flex items-center gap-6">
-              <Link href="/properties" className="flex items-center gap-1.5 text-foreground/80 hover:text-primary-600 transition-all duration-300 text-sm font-medium">
-                <LayoutGrid className="w-4 h-4 opacity-70" />
-                Properti
-              </Link>
-              <Link href="/scm" className="flex items-center gap-1.5 text-foreground/80 hover:text-primary-600 transition-all duration-300 text-sm font-medium">
-                <Package className="w-4 h-4 opacity-70" />
-                Proses SCM
-              </Link>
-              <Link href="/saved" className="flex items-center gap-1.5 text-foreground/80 hover:text-primary-600 transition-all duration-300 text-sm font-medium">
-                <Heart className="w-4 h-4 opacity-70" />
-                Favorit
-              </Link>
-              {isAdmin && (
-                <Link href="/admin" className="flex items-center gap-1.5 text-red-600 font-semibold hover:bg-red-50 transition-all duration-300 text-sm border border-red-100 px-3 py-1.5 rounded-lg bg-red-50/50">
-                  <ShieldCheck className="w-4 h-4" />
-                  Panel Admin
+            {!isAuthPage && (
+              <div className="flex items-center gap-6">
+                <Link href="/properties" className="flex items-center gap-1.5 text-foreground/80 hover:text-primary-600 transition-all duration-300 text-sm font-medium">
+                  <LayoutGrid className="w-4 h-4 opacity-70" />
+                  Properti
                 </Link>
-              )}
-            </div>
+                <Link href="/scm" className="flex items-center gap-1.5 text-foreground/80 hover:text-primary-600 transition-all duration-300 text-sm font-medium">
+                  <Package className="w-4 h-4 opacity-70" />
+                  Layanan SCM
+                </Link>
+                <Link href="/saved" className="flex items-center gap-1.5 text-foreground/80 hover:text-primary-600 transition-all duration-300 text-sm font-medium">
+                  <Heart className="w-4 h-4 opacity-70" />
+                  Favorit
+                </Link>
+              </div>
+            )}
             
-            <div className="flex items-center gap-4 pl-6 border-l border-border">
+            <div className={`flex items-center gap-4 ${!isAuthPage ? 'pl-6 border-l border-border' : ''}`}>
               {isLoggedIn ? (
                 <div className="relative" ref={dropdownRef}>
                   <button 
@@ -120,7 +122,7 @@ export default function Navbar() {
                       <div className="px-4 py-2 border-b border-border/50 mb-1">
                         <p className="text-xs font-semibold text-foreground/40 uppercase tracking-wider">Akun Saya</p>
                       </div>
-                      
+
                       <Link 
                         href="/profile/settings"
                         onClick={() => setIsDropdownOpen(false)}

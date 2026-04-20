@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 export interface PropertyData {
-  id: string;
+  id: string | number;
   title: string;
   price: number;
   address: string;
@@ -100,7 +100,7 @@ export default function PropertyCard({ property }: { property: PropertyData }) {
           <div>
             <p className="text-xs text-foreground/50 uppercase tracking-wider mb-0.5">Harga</p>
             <p className="text-xl font-bold text-primary-600">
-              ${property.price.toLocaleString("en-US")}
+              Rp {property.price.toLocaleString("id-ID")}
             </p>
           </div>
           <Link

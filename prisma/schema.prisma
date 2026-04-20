@@ -39,7 +39,9 @@ model Property {
   updatedAt       DateTime        @updatedAt
   inquiries       Inquiry[]
   savedByUsers    SavedProperty[]
+  shipments       Shipment[]
 
+  @@unique([title, address])
   @@map("properties")
 }
 
@@ -68,6 +70,40 @@ model Inquiry {
   @@map("inquiries")
 }
 
+model Supplier {
+  id        Int      @id @default(autoincrement())
+  name      String
+  category  String
+  rating    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("suppliers")
+}
+
+model Inventory {
+  id           Int      @id @default(autoincrement())
+  name         String
+  stock        Int
+  reorderPoint Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("inventories")
+}
+
+model Shipment {
+  id            Int            @id @default(autoincrement())
+  status        ShipmentStatus @default(PENDING)
+  estimatedDate DateTime
+  propertyId    Int
+  property      Property       @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@map("shipments")
+}
+
 enum Role {
   USER
   ADMIN
@@ -78,4 +114,10 @@ enum Category {
   APARTMENT
   LAND
   COMMERCIAL
+}
+
+enum ShipmentStatus {
+  PENDING
+  SHIPPED
+  DELIVERED
 }
