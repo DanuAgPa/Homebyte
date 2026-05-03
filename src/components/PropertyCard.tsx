@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { toggleWishlistAction, checkWishlistStatusAction } from "@/lib/actions/wishlistActions";
 
 export interface PropertyData {
   id: string | number;
@@ -20,24 +22,35 @@ export interface PropertyData {
 
 export default function PropertyCard({ property }: { property: PropertyData }) {
   const [isSaved, setIsSaved] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    const savedItems = JSON.parse(localStorage.getItem("homebyte_wishlist") || "[]");
-    const isCurrentlySaved = savedItems.some((item: PropertyData) => item.id === property.id);
-    setIsSaved(isCurrentlySaved);
+    const checkStatus = async () => {
+      const result = await checkWishlistStatusAction(Number(property.id));
+      setIsSaved(result.isSaved);
+    };
+    checkStatus();
   }, [property.id]);
 
-  const handleWishlist = () => {
-    const savedItems = JSON.parse(localStorage.getItem("homebyte_wishlist") || "[]");
-    if (isSaved) {
-      const updatedItems = savedItems.filter((item: PropertyData) => item.id !== property.id);
-      localStorage.setItem("homebyte_wishlist", JSON.stringify(updatedItems));
-      setIsSaved(false);
-      alert("Properti dihapus dari Wishlist.");
-    } else {
-      localStorage.setItem("homebyte_wishlist", JSON.stringify([...savedItems, property]));
-      setIsSaved(true);
-      alert("Properti berhasil ditambahkan ke Wishlist!");
+  const handleWishlist = async () => {
+    if (isLoading) return;
+    setIsLoading(true);
+    
+    try {
+      const result = await toggleWishlistAction(Number(property.id));
+      if (result.success) {
+        setIsSaved(result.isSaved);
+        alert(result.message);
+        // Refresh the router to instantly update the Saved page if we're on it
+        router.refresh();
+      } else {
+        alert(result.error);
+      }
+    } catch (error) {
+      alert("Gagal memperbarui Wishlist.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -53,8 +66,9 @@ export default function PropertyCard({ property }: { property: PropertyData }) {
         <div className="absolute top-4 right-4 z-10">
           <button 
             onClick={handleWishlist}
+            disabled={isLoading}
             title="Tambah ke Wishlist"
-            className="p-2 rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-md transition-colors shadow-sm focus:outline-none"
+            className="p-2 rounded-full bg-white/20 hover:bg-white/40 backdrop-blur-md transition-colors shadow-sm focus:outline-none disabled:opacity-50"
           >
             {/* Heart Icon */}
             <svg className={`w-5 h-5 ${isSaved ? "text-red-500 fill-current" : "text-white"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">

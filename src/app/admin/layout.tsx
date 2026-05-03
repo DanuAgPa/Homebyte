@@ -4,7 +4,7 @@ import AdminNavbar from "@/components/AdminNavbar";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex bg-gray-50 flex-col md:flex-row min-h-screen">
+    <div className="admin-area flex bg-gray-50 flex-col md:flex-row min-h-screen">
       <AdminSidebar />
 
       {/* Main Content Area */}

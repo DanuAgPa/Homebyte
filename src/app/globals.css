@@ -85,3 +85,12 @@ body {
   transform: translateY(-4px);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
+
+/* Admin Input Overrides */
+.admin-area input,
+.admin-area textarea,
+.admin-area select {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  opacity: 1 !important;
+}

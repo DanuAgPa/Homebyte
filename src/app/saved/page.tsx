@@ -1,18 +1,24 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
-import PropertyCard, { PropertyData } from "@/components/PropertyCard";
+import React from "react";
+import prisma from "@/lib/prisma";
+import { cookies } from "next/headers";
+import PropertyCard from "@/components/PropertyCard";
 import BackButton from "@/components/BackButton";
 
-export default function SavedPropertiesPage() {
-  const [savedProperties, setSavedProperties] = useState<PropertyData[]>([]);
-
-  useEffect(() => {
-    const data = localStorage.getItem("homebyte_wishlist");
-    if (data) {
-      setSavedProperties(JSON.parse(data));
-    }
-  }, []);
+export default async function SavedPropertiesPage() {
+  const cookieStore = await cookies();
+  const userIdStr = cookieStore.get("auth_session")?.value;
+  
+  let savedProperties = [];
+  
+  if (userIdStr) {
+    const saved = await prisma.savedProperty.findMany({
+      where: { userId: parseInt(userIdStr) },
+      include: { property: true },
+      orderBy: { savedAt: 'desc' }
+    });
+    // Extract the actual property data from the relation
+    savedProperties = saved.map(item => item.property);
+  }
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in">
@@ -34,7 +40,10 @@ export default function SavedPropertiesPage() {
       {savedProperties.length === 0 ? (
         <div className="text-center py-20 bg-gray-50 rounded-3xl border border-gray-100">
           <h3 className="text-2xl font-bold text-gray-500 mb-2">Wishlist Kosong</h3>
-          <p className="text-gray-400">Anda belum menyimpan properti apapun. Silakan jelajahi properti kami.</p>
+          <p className="text-gray-400">Anda belum memiliki properti yang disimpan.</p>
+          {!userIdStr && (
+            <p className="text-primary-600 mt-4 font-medium">Silakan login untuk melihat wishlist Anda yang tersimpan.</p>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

@@ -140,7 +140,7 @@ export default function SCMClient({
               headers={["Nama Barang", "Stok", "Reorder Point", "Status"]}
               rows={initialInventory.map((i: any) => [
                 <div key={i.id} className="font-bold text-gray-900">{i.name}</div>,
-                <div key={i.id} className="font-medium">{i.stock} Unit</div>,
+                <div key={i.id} className="font-bold text-gray-900">{i.stock} Unit</div>,
                 <Tooltip key={i.id} text="Batas minimum stok sebelum sistem menyarankan pemesanan ulang ke supplier.">
                   <div className="flex items-center gap-1 text-gray-500 border-b border-dotted border-gray-300 pb-0.5">
                     {i.reorderPoint} Unit <Info className="w-3.5 h-3.5 text-primary-400" />

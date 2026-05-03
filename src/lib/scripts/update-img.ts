@@ -1,27 +1,16 @@
-import prisma from '../prisma';
+import prisma from '../prisma'
 
-async function updateImage() {
-  try {
-    const prop = await prisma.property.findFirst({
-      where: {
-        title: 'Urban Loft Apartment'
-      }
-    });
-
-    if (prop) {
-      await prisma.property.update({
-        where: { id: prop.id },
-        data: { imageUrl: 'https://images.unsplash.com/photo-1560448204-603b3fc33ddc?q=80&w=2070&auto=format&fit=crop' }
-      });
-      console.log('Successfully updated image for Urban Loft Apartment');
-    } else {
-      console.log('Property not found');
-    }
-  } catch (error) {
-    console.error('Error:', error);
-  } finally {
-    await prisma.$disconnect();
-  }
+async function main() {
+  const newUrl = 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80'
+  
+  const updated = await prisma.property.updateMany({
+    where: { title: 'Urban Loft Apartment' },
+    data: { imageUrl: newUrl }
+  })
+  
+  console.log('Updated:', updated.count, 'properties')
 }
 
-updateImage();
+main().finally(async () => {
+  await prisma.$disconnect()
+})
