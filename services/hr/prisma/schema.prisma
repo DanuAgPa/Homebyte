@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Department {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  employees Employee[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@map("hr_departments")
+}
+
+model Employee {
+  id           Int          @id @default(autoincrement())
+  name         String
+  userId       Int?         @unique
+  departmentId Int
+  department   Department   @relation(fields: [departmentId], references: [id])
+  position     String
+  hireDate     DateTime
+  salary       Float?
+  attendances  Attendance[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@map("hr_employees")
+}
+
+model Attendance {
+  id         Int       @id @default(autoincrement())
+  employeeId Int
+  employee   Employee  @relation(fields: [employeeId], references: [id])
+  date       DateTime  @default(now())
+  status     String    // e.g., "PRESENT", "ABSENT", "LATE"
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@map("hr_attendances")
+}

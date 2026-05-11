@@ -8,7 +8,7 @@ export default async function SavedPropertiesPage() {
   const cookieStore = await cookies();
   const userIdStr = cookieStore.get("auth_session")?.value;
   
-  let savedProperties = [];
+  let savedProperties: any[] = [];
   
   if (userIdStr) {
     const saved = await prisma.savedProperty.findMany({

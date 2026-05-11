@@ -1,38 +1,40 @@
 # Stage 1: Build
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Copy package.json and lockfile
+# Copy package.json dan lockfile
 COPY package*.json ./
-RUN npm ci
 
-# Copy the rest of the application code
+# PERBAIKAN: Menggunakan --legacy-peer-deps agar tidak bentrok React 18 & 19
+RUN npm install --legacy-peer-deps && npm cache clean --force
+
+# Copy semua kode aplikasi
 COPY . .
 
-# Generate Prisma Client agar tidak error saat Next.js build
+# Generate Prisma Client (Wajib agar tidak error saat build)
 RUN npx prisma generate
 
-# Build the Next.js application
+# Build aplikasi Next.js
 RUN npm run build
 
 # Stage 2: Production Run
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 
 WORKDIR /app
 ENV NODE_ENV=production
 
-# Don't run production as root
+# Keamanan: Jangan jalankan sebagai root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 USER nextjs
 
-# Copy only the standalone output and necessary static files
+# Ambil hasil build dari stage builder
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Next.js standalone runs on 3000 by default
+# Port default Next.js
 EXPOSE 3000
 
 ENV PORT=3000

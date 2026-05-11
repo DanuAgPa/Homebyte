@@ -1,4 +1,5 @@
 import prisma from "../prisma";
+import { Category } from "@prisma/client";
 import * as dotenv from "dotenv";
 
 dotenv.config();
@@ -9,7 +10,7 @@ async function seed() {
   const properties = [
     {
       title: "Villa Kayu Estetik",
-      category: "HOUSE",
+      category: Category.HOUSE,
       city: "Ubud, Bali",
       address: "Jl. Raya Tegallalang",
       price: 4500000000,
@@ -22,7 +23,7 @@ async function seed() {
     },
     {
       title: "Kost Eksklusif Unmer",
-      category: "HOUSE",
+      category: Category.HOUSE,
       city: "Malang",
       address: "Jl. Terusan Dieng",
       price: 2100000000,
@@ -35,7 +36,7 @@ async function seed() {
     },
     {
       title: "The Icon Tower A",
-      category: "APARTMENT",
+      category: Category.APARTMENT,
       city: "Kuningan, Jakarta",
       address: "Kawasan Mega Kuningan",
       price: 2800000000,
@@ -48,7 +49,7 @@ async function seed() {
     },
     {
       title: "Tanah Kavling Industri",
-      category: "LAND",
+      category: Category.LAND,
       city: "Karawang",
       address: "Kawasan Industri KIIC",
       price: 8000000000,
@@ -61,7 +62,7 @@ async function seed() {
     },
     {
       title: "Rumah Modern Tropis",
-      category: "HOUSE",
+      category: Category.HOUSE,
       city: "Surabaya Barat",
       address: "Citraland Cluster Northwest",
       price: 1750000000,
@@ -74,7 +75,7 @@ async function seed() {
     },
     {
       title: "Penthouse Sudirman",
-      category: "APARTMENT",
+      category: Category.APARTMENT,
       city: "Jakarta Pusat",
       address: "Jl. Jenderal Sudirman Kav 21",
       price: 7500000000,
@@ -87,7 +88,7 @@ async function seed() {
     },
     {
       title: "Smart Compact House",
-      category: "HOUSE",
+      category: Category.HOUSE,
       city: "BSD City",
       address: "Cluster Tabebuya",
       price: 1200000000,
@@ -100,7 +101,7 @@ async function seed() {
     },
     {
       title: "Lahan Perkebunan Pinus",
-      category: "LAND",
+      category: Category.LAND,
       city: "Batu, Malang",
       address: "Kawasan Wisata Songgoriti",
       price: 3500000000,
@@ -113,7 +114,7 @@ async function seed() {
     },
     {
       title: "Urban Loft Apartment",
-      category: "APARTMENT",
+      category: Category.APARTMENT,
       city: "Bandung",
       address: "Jl. Cihampelas No. 160",
       price: 950000000,
@@ -126,7 +127,7 @@ async function seed() {
     },
     {
       title: "Resort Waterfront",
-      category: "HOUSE",
+      category: Category.HOUSE,
       city: "Labuan Bajo",
       address: "Pantai Waecicu",
       price: 12000000000,

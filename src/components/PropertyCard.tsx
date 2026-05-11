@@ -28,7 +28,7 @@ export default function PropertyCard({ property }: { property: PropertyData }) {
   useEffect(() => {
     const checkStatus = async () => {
       const result = await checkWishlistStatusAction(Number(property.id));
-      setIsSaved(result.isSaved);
+      setIsSaved(result?.isSaved ?? false);
     };
     checkStatus();
   }, [property.id]);
@@ -40,7 +40,7 @@ export default function PropertyCard({ property }: { property: PropertyData }) {
     try {
       const result = await toggleWishlistAction(Number(property.id));
       if (result.success) {
-        setIsSaved(result.isSaved);
+        setIsSaved(result?.isSaved ?? false);
         alert(result.message);
         // Refresh the router to instantly update the Saved page if we're on it
         router.refresh();
