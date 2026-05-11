@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id        Int           @id @default(autoincrement())
+  name      String
+  email     String        @unique
+  phone     String?
+  address   String?
+  leads     Lead[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("crm_customers")
+}
+
+model Lead {
+  id           Int           @id @default(autoincrement())
+  customerId   Int
+  customer     Customer      @relation(fields: [customerId], references: [id])
+  status       String        // e.g., "NEW", "CONTACTED", "QUALIFIED", "LOST"
+  source       String?
+  opportunities Opportunity[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@map("crm_leads")
+}
+
+model Opportunity {
+  id             Int       @id @default(autoincrement())
+  leadId         Int
+  lead           Lead      @relation(fields: [leadId], references: [id])
+  amount         Float
+  stage          String    // e.g., "PROSPECTING", "PROPOSAL", "NEGOTIATION", "CLOSED_WON", "CLOSED_LOST"
+  expectedClose  DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@map("crm_opportunities")
+}
