@@ -26,17 +26,17 @@ export default function UploadForm() {
       });
 
       const data = await res.json();
-      if (res.ok) {
-        setStatus(`Berhasil Unggah: ${data.fileName}`);
+      if (res.ok && data.success) {
+        setStatus('Berhasil diunggah!');
         setFileUrl(data.fileUrl);
         setFile(null);
       } else {
         setStatus(`Gagal: ${data.error}`);
-        alert(`Error dari Server: ${data.details || data.error}`);
+        alert(data.error);
       }
     } catch (err: any) {
       setStatus('Terjadi kesalahan koneksi saat mengunggah');
-      alert(`Koneksi Error: ${err.message || String(err)}`);
+      alert(err.message || String(err));
     } finally {
       setLoading(false);
     }
@@ -61,7 +61,7 @@ export default function UploadForm() {
           {loading ? 'Memproses...' : 'Upload Dokumen'}
         </button>
         {status && (
-          <p className={`text-sm mt-2 font-medium ${status.startsWith('Berhasil') ? 'text-green-600' : 'text-red-600'}`}>
+          <p className={`text-sm mt-2 font-medium ${status === 'Berhasil diunggah!' ? 'text-green-600' : 'text-red-600'}`}>
             {status}
           </p>
         )}

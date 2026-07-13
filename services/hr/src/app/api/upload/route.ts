@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     const file = formData.get('file') as File | null;
 
     if (!file) {
-      return NextResponse.json({ error: 'Tidak ada file yang diunggah' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Tidak ada file yang diunggah' }, { status: 400 });
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
@@ -23,15 +23,15 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ 
       success: true, 
-      message: 'Dokumen HR berhasil diunggah',
+      message: 'Berhasil diunggah!',
       fileName,
       fileUrl
     });
   } catch (error: any) {
     console.error(error);
     return NextResponse.json({ 
-      error: 'Gagal mengunggah dokumen HR',
-      details: error.message || String(error)
+      success: false, 
+      error: error.message 
     }, { status: 500 });
   }
 }

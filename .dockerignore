@@ -1,0 +1,13 @@
+node_modules
+.next
+out
+.git
+.vscode
+*.log
+Dockerfile
+docker-compose.yml
+README.md
+/services/crm/node_modules
+/services/crm/.next
+/services/hr/node_modules
+/services/hr/.next

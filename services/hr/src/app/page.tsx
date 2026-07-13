@@ -3,6 +3,8 @@ import UploadForm from '@/components/UploadForm';
 import EmployeeForm from '@/components/EmployeeForm';
 import AttendanceButton from '@/components/AttendanceButton';
 
+export const dynamic = 'force-dynamic';
+
 export default async function HRDashboard() {
   const totalEmployees = await prisma.employee.count();
   

@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     const file = formData.get('file') as File | null;
 
     if (!file) {
-      return NextResponse.json({ error: 'Tidak ada file yang diunggah' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Tidak ada file yang diunggah' }, { status: 400 });
     }
 
     const buffer = Buffer.from(await file.arrayBuffer());
@@ -19,24 +19,19 @@ export async function POST(req: NextRequest) {
       'Content-Type': file.type,
     });
 
-    // Menggunakan localhost agar link yang dihasilkan bisa diakses langsung via browser
     const fileUrl = `http://localhost:9000/${BUCKET_NAME}/${fileName}`;
 
     return NextResponse.json({ 
       success: true, 
-      message: 'File berhasil diunggah',
+      message: 'Berhasil diunggah!',
       fileName,
       fileUrl
     });
   } catch (error: any) {
-    // Log detail error sesuai instruksi
-    console.error('======= DETAIL ERROR UPLOAD MINIO =======');
     console.error(error);
-    console.error('Stack Trace:', error.stack);
-    
     return NextResponse.json({ 
-      error: 'Gagal mengunggah file',
-      details: error.message || String(error)
+      success: false, 
+      error: error.message 
     }, { status: 500 });
   }
 }

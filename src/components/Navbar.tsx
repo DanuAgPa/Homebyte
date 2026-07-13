@@ -108,12 +108,12 @@ export default function Navbar() {
                 <div className="relative" ref={dropdownRef}>
                   <button 
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className="flex items-center gap-2 px-3 py-2 bg-gray-50 hover:bg-gray-100 rounded-xl border border-gray-100 transition-all duration-200"
+                    className="flex items-center gap-2 px-3 py-2 bg-foreground/5 hover:bg-foreground/10 rounded-xl border border-foreground/10 transition-all duration-200"
                   >
                     <div className="w-8 h-8 rounded-lg bg-primary-100 flex items-center justify-center text-primary-600 shadow-sm">
                       <User className="w-4 h-4" />
                     </div>
-                    <span className="text-sm font-bold text-foreground/80 pr-1">{userName}</span>
+                    <span className="text-sm font-bold text-foreground/80 pr-1 max-w-[120px] truncate block">{userName}</span>
                   </button>
 
                   {/* Dropdown Menu */}
