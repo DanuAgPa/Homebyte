@@ -122,4 +122,13 @@ enum ShipmentStatus {
   DELIVERED
 }
 
+model Notification {
+  id          Int      @id @default(autoincrement())
+  type        String   // "hr"
+  subject     String
+  body        String
+  senderEmail String
+  createdAt   DateTime @default(now())
+}
+
 

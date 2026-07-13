@@ -3,6 +3,7 @@
 import React, { useState, useRef } from "react";
 import SaveToWishlistButton from "@/components/SaveToWishlistButton";
 import { createInquiryAction } from "@/lib/actions/inquiryActions";
+import { sendNotificationToAdmin } from "@/lib/actions/notificationActions";
 
 interface InquiryFormProps {
   propertyId: string;
@@ -32,6 +33,12 @@ export default function InquiryForm({ propertyId }: InquiryFormProps) {
     });
 
     if (result.success) {
+      // Kirim juga ke notifikasi Admin
+      await sendNotificationToAdmin({
+        subject: `Inquiry Properti dari ${name} (${email})`,
+        message: `Tel: ${tel} - ${message}`,
+      });
+
       setStatus('success');
       formRef.current.reset();
       setTimeout(() => setStatus('idle'), 5000);

@@ -2,6 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import { createInquiryAction } from "@/lib/actions/inquiryActions";
+import { sendNotificationToAdmin } from "@/lib/actions/notificationActions";
 
 export default function ContactPage() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success'>('idle');
@@ -26,6 +27,12 @@ export default function ContactPage() {
     });
 
     if (result.success) {
+      // Kirim juga ke notifikasi Admin
+      await sendNotificationToAdmin({
+        subject: `Pesan dari ${name} (${email})`,
+        message: message,
+      });
+
       setStatus('success');
       formRef.current.reset();
       // Reset status sukses setelah 5 detik

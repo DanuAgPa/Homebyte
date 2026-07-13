@@ -1,7 +1,7 @@
 import React from "react";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
-import { ArrowRight, Package, Users, Home, Clock, ChevronRight } from "lucide-react";
+import { ArrowRight, Package, Users, Home, Clock, ChevronRight, MessageSquare } from "lucide-react";
 import { checkAdmin } from "@/lib/auth-utils";
 import { redirect } from "next/navigation";
 
@@ -10,22 +10,28 @@ export default async function AdminDashboardPage() {
   if (!admin) redirect("/login");
 
   // Fetch Stats
-  const [propCount, userCount, supplierCount, inventoryCount, shipmentCount] = await Promise.all([
+  const [propCount, userCount, supplierCount, inventoryCount, shipmentCount, notificationCount] = await Promise.all([
     prisma.property.count(),
     prisma.user.count(),
     prisma.supplier.count(),
     prisma.inventory.count(),
     prisma.shipment.count(),
+    prisma.notification.count({ where: { type: "admin" } }),
   ]);
 
   // Fetch Recents
-  const [recentUsers, recentProperties, recentShipments] = await Promise.all([
+  const [recentUsers, recentProperties, recentShipments, recentNotifications] = await Promise.all([
     prisma.user.findMany({ orderBy: { createdAt: "desc" }, take: 5 }),
     prisma.property.findMany({ orderBy: { createdAt: "desc" }, take: 5 }),
     prisma.shipment.findMany({ 
       include: { property: true },
       orderBy: { updatedAt: "desc" }, 
       take: 5 
+    }),
+    prisma.notification.findMany({
+      where: { type: "admin" },
+      orderBy: { createdAt: "desc" },
+      take: 5,
     }),
   ]);
 
@@ -65,6 +71,14 @@ export default async function AdminDashboardPage() {
           bgColor="bg-blue-50"
           link="/admin/scm"
           footer="Audit & Logistik"
+        />
+        <StatCard 
+          title="Pesan Masuk" 
+          value={notificationCount} 
+          icon={<MessageSquare className="w-6 h-6 text-green-600" />}
+          bgColor="bg-green-50"
+          link="/admin/messages"
+          footer="Dari pengunjung"
         />
       </div>
 
@@ -127,6 +141,39 @@ export default async function AdminDashboardPage() {
               </div>
             )) : (
               <div className="p-12 text-center text-gray-400 italic">Belum ada aktivitas pengiriman.</div>
+            )}
+          </div>
+        </div>
+
+        {/* Recent Messages */}
+        <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden">
+          <div className="p-8 border-b border-gray-50 flex justify-between items-center bg-gray-50/30">
+            <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+              <MessageSquare className="w-5 h-5 text-gray-400" />
+              Pesan Terbaru
+            </h3>
+            <Link href="/admin/messages" className="text-sm font-black text-primary-600 hover:underline flex items-center gap-1 uppercase tracking-widest">
+              Lihat Semua <ChevronRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <div className="divide-y divide-gray-50">
+            {recentNotifications.length > 0 ? recentNotifications.map((n: any) => (
+              <div key={n.id} className="p-6 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center font-bold text-green-600">
+                    <MessageSquare className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-900 line-clamp-1">{n.subject}</p>
+                    <p className="text-xs text-gray-400">{n.senderEmail}</p>
+                  </div>
+                </div>
+                <div className="text-[10px] font-black text-gray-400 uppercase">
+                  {new Date(n.createdAt).toLocaleDateString('id-ID')}
+                </div>
+              </div>
+            )) : (
+              <div className="p-12 text-center text-gray-400 italic">Belum ada pesan masuk.</div>
             )}
           </div>
         </div>

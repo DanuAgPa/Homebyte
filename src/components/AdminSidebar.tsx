@@ -8,6 +8,7 @@ import {
   Home, 
   Users, 
   Package, 
+  MessageSquare,
   Globe,
   LogOut,
   ChevronRight
@@ -26,6 +27,7 @@ export default function AdminSidebar() {
     { name: "Kelola Properti", href: "/admin/properties", icon: <Home className="w-5 h-5" /> },
     { name: "Daftar Pengguna", href: "/admin/users", icon: <Users className="w-5 h-5" /> },
     { name: "Pantau SCM", href: "/admin/scm", icon: <Package className="w-5 h-5" /> },
+    { name: "Pesan Masuk", href: "/admin/messages", icon: <MessageSquare className="w-5 h-5" /> },
   ];
 
   return (
